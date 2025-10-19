@@ -1,9 +1,284 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Nur ein Test</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nur ein Test... Leider erwischt :-)</title>
+  <style>
+    /* Basis-Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f3f4f6; color:#111; }
+
+    /* Zentriertes Layout */
+    .wrap {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(16,24,40,0.08);
+      overflow: hidden;
+      max-width: 920px;
+      width: 100%;
+      display:flex;
+      gap: 1rem;
+    }
+
+    /* Linke Seite: Bild */
+    .visual {
+      flex: 1 1 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: linear-gradient(180deg, #fff 0%, #fbfbfd 100%);
+    }
+
+    /* Inline SVG wird skaliert */
+    .funny-img { width: 100%; max-width: 420px; height: auto; }
+
+    /* Rechte Seite: Überschrift + Text */
+    .meta {
+      flex: 0 0 360px;
+      padding: 2rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    h1 { font-size: 1.6rem; margin-bottom: .5rem; }
+    p { color: #444; line-height: 1.4; margin-bottom: 1rem; }
+
+    /* Cookie-Banner (Modal) */
+    .cookie-modal {
+      position: fixed;
+      left: 0; right: 0; bottom: 18px;
+      margin: 0 auto;
+      max-width: 960px;
+      background: linear-gradient(180deg,#fff,#fbfdff);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.12);
+      padding: 1rem 1.2rem;
+      display:flex;
+      gap: 1rem;
+      align-items:center;
+      z-index: 9999;
+      transform: translateY(0);
+    }
+    .cookie-text { flex:1; font-size: .95rem; color:#1f2937; }
+    .cookie-actions { display:flex; gap:.6rem; }
+    button { cursor:pointer; border:0; border-radius:8px; padding: .6rem .85rem; font-weight:600; }
+    .btn-yes { background: #0ea5a4; color: white; }
+    .btn-no { background: #e6e9ee; color: #111; }
+
+    /* small footer for opt-out */
+    .optout {
+      margin-top: .75rem;
+      font-size:.85rem;
+      color:#6b7280;
+    }
+
+    /* responsive */
+    @media (max-width:800px) {
+      .card { flex-direction: column; }
+      .meta { flex: none; width: 100%; }
+      .cookie-modal { left: 12px; right: 12px; bottom: 12px; }
+    }
+  </style>
 </head>
-<body style="text-align:center; font-family:sans-serif;">
-  <h1>Nur ein Test... Leider erwischt :-)</h1>
-  <img src="funny_image.jpg" alt="Lustiges Bild" style="
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Lustiges Testbild">
+      <div class="visual">
+        <!-- Einfaches, lustiges Inline-SVG (kein externes Bild nötig) -->
+        <svg class="funny-img" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lustiges Smiley Bild">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#ffd27d"/>
+              <stop offset="1" stop-color="#ffb86b"/>
+            </linearGradient>
+          </defs>
+          <rect rx="28" ry="28" width="100%" height="100%" fill="url(#g1)"/>
+          <!-- Augen -->
+          <g transform="translate(120,80)">
+            <ellipse cx="120" cy="110" rx="32" ry="40" fill="#222"/>
+            <ellipse cx="300" cy="110" rx="32" ry="40" fill="#222"/>
+            <!-- lachender Mund -->
+            <path d="M140 220 C 200 300, 260 300, 320 220" stroke="#222" stroke-width="18" fill="none" stroke-linecap="round"/>
+            <!-- frecher Zunge -->
+            <path d="M200 232 C 230 260, 280 260, 310 232" fill="#ff6b81"/>
+          </g>
+          <!-- Text Overlay -->
+          <text x="50%" y="92%" text-anchor="middle" font-family="system-ui, Arial" font-size="28" fill="#1f2937" font-weight="700">
+            Nur ein Test... Leider erwischt :-)
+          </text>
+        </svg>
+      </div>
+
+      <div class="meta">
+        <h1>Ups — Testseite</h1>
+        <p>Dies ist nur ein Test. Wenn du zustimmst, werden Besucherdaten an Google Analytics gesendet (nur nach Einwilligung).</p>
+        <div class="optout" id="statusLine" aria-live="polite">Noch keine Entscheidung getroffen.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cookie-Banner -->
+  <div class="cookie-modal" id="cookieBanner" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieDesc">
+    <div class="cookie-text">
+      <div id="cookieTitle" style="font-weight:700; margin-bottom:.2rem">Cookies & Tracking</div>
+      <div id="cookieDesc">Darf diese Seite Google Analytics verwenden, um Besucherdaten zu erfassen? (IP-Anonymisierung wird aktiviert.)</div>
+    </div>
+
+    <div class="cookie-actions" role="group" aria-label="Cookie Aktionen">
+      <button class="btn-yes" id="btnAccept">Ja, zustimmen</button>
+      <button class="btn-no" id="btnDecline">Nein, ablehnen</button>
+    </div>
+  </div>
+
+  <!-- Opt-out / Einstellungen (sichtbar, wenn bereits entschieden) -->
+  <div style="position:fixed; left:12px; bottom:12px; font-size:.9rem; z-index:9998;">
+    <button id="btnManage" style="background:transparent; border:1px solid #e5e7eb; padding:.4rem .6rem; border-radius:8px;">Tracking-Einstellungen</button>
+  </div>
+
+  <script>
+    /* ========= Konfiguration ========= */
+    // Ersetze dies durch deine GA4 Mess-ID, z. B. "G-ABCDEFG123"
+    const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+
+    // Cookie-Name und Ablauf (Tage)
+    const CONSENT_COOKIE_NAME = "site_tracking_consent";
+    const CONSENT_EXPIRE_DAYS = 365;
+
+    /* ========= Hilfsfunktionen für Cookies ========= */
+    function setCookie(name, value, days) {
+      const d = new Date();
+      d.setTime(d.getTime() + (days*24*60*60*1000));
+      const expires = "expires=" + d.toUTCString();
+      document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/;SameSite=Lax";
+    }
+
+    function getCookie(name) {
+      const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return v ? decodeURIComponent(v.pop()) : null;
+    }
+
+    /* ========= Google Analytics (lade nur nach Zustimmung) ========= */
+    let gaInitialized = false;
+
+    function loadGoogleAnalytics() {
+      if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") {
+        console.warn("Keine gültige GA_MEASUREMENT_ID gesetzt. Ersetze 'G-XXXXXXXXXX' durch deine GA4 ID.");
+        return;
+      }
+      if (gaInitialized) return;
+      // Dynamisch gtag.js einfügen
+      const s = document.createElement('script');
+      s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
+      s.async = true;
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      // IP-Anonymisierung setzen (zusätzlich zu anderen Datenschutzmaßnahmen)
+      gtag('config', GA_MEASUREMENT_ID, { 'anonymize_ip': true });
+
+      gaInitialized = true;
+      console.info("Google Analytics geladen (anonymize_ip=true).");
+    }
+
+    function disableGoogleAnalytics() {
+      // Entferne globales gtag falls vorhanden (kein vollständiges Entfernen von externen Anfragen möglich)
+      try {
+        if (window.gtag) { window.gtag = function(){}; }
+        // Hinweis: Bereits geladene externe Ressourcen können nicht rückwirkend "entladen" werden.
+      } catch(e) { console.error(e); }
+    }
+
+    /* ========= Banner-Logik ========= */
+    const banner = document.getElementById('cookieBanner');
+    const btnAccept = document.getElementById('btnAccept');
+    const btnDecline = document.getElementById('btnDecline');
+    const statusLine = document.getElementById('statusLine');
+    const btnManage = document.getElementById('btnManage');
+
+    function updateStatusText() {
+      const val = getCookie(CONSENT_COOKIE_NAME);
+      if (val === "yes") statusLine.textContent = "Du hast zugestimmt — Analytics aktiviert.";
+      else if (val === "no") statusLine.textContent = "Du hast abgelehnt — kein Tracking.";
+      else statusLine.textContent = "Noch keine Entscheidung getroffen.";
+    }
+
+    function showBanner() {
+      banner.style.display = 'flex';
+      banner.setAttribute('aria-hidden', 'false');
+    }
+    function hideBanner() {
+      banner.style.display = 'none';
+      banner.setAttribute('aria-hidden', 'true');
+    }
+
+    btnAccept.addEventListener('click', function(){
+      setCookie(CONSENT_COOKIE_NAME, "yes", CONSENT_EXPIRE_DAYS);
+      loadGoogleAnalytics();
+      hideBanner();
+      updateStatusText();
+      // Optional: send an event that consent was given
+      if (window.gtag) window.gtag('event','consent_given',{method:'cookie-banner'});
+    });
+
+    btnDecline.addEventListener('click', function(){
+      setCookie(CONSENT_COOKIE_NAME, "no", CONSENT_EXPIRE_DAYS);
+      disableGoogleAnalytics();
+      hideBanner();
+      updateStatusText();
+    });
+
+    btnManage.addEventListener('click', function(){
+      // Banner wieder öffnen, damit Nutzer Einstellungen ändern kann
+      showBanner();
+    });
+
+    // Beim Laden: prüfe Cookie und handle entsprechend
+    document.addEventListener('DOMContentLoaded', function(){
+      const consent = getCookie(CONSENT_COOKIE_NAME);
+      updateStatusText();
+
+      if (consent === "yes") {
+        // wenn bereits zugestimmt, Analytics laden
+        loadGoogleAnalytics();
+        hideBanner();
+      } else if (consent === "no") {
+        // abgelehnt -> nichts laden
+        disableGoogleAnalytics();
+        hideBanner();
+      } else {
+        // noch keine Entscheidung -> Banner zeigen
+        showBanner();
+      }
+    });
+
+    /* ========= Hinweis zu Opt-out und Löschung ========= */
+    // Kleine Hilfsfunktion (kann vom Admin auf Seite angeboten werden), z.B. zur Löschung der Entscheidung
+    function clearConsent() {
+      setCookie(CONSENT_COOKIE_NAME, "", -1); // Cookie löschen
+      updateStatusText();
+      disableGoogleAnalytics();
+      showBanner();
+    }
+
+    // Für Entwickler: exponiere Funktion in Fenster für schnelle Tests in Konsole
+    window._siteConsent = {
+      setYes: () => { setCookie(CONSENT_COOKIE_NAME,"yes",CONSENT_EXPIRE_DAYS); loadGoogleAnalytics(); updateStatusText(); hideBanner(); },
+      setNo:  () => { setCookie(CONSENT_COOKIE_NAME,"no",CONSENT_EXPIRE_DAYS); disableGoogleAnalytics(); updateStatusText(); hideBanner(); },
+      clear: clearConsent
+    };
+  </script>
+</body>
+</html>
