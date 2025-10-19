@@ -2,9 +2,26 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Hello World</title>
+  <title>Nur ein Test</title>
+  <script>
+    function askCookieConsent() {
+      if (confirm("Diese Seite verwendet Cookies für Analysezwecke. Einverstanden?")) {
+        // Google Analytics laden
+        const script = document.createElement('script');
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"; // Deine GA-ID hier
+        script.async = true;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX'); // Deine GA-ID hier
+      }
+    }
+
+    window.onload = askCookieConsent;
+  </script>
 </head>
-<body>
-  <h1>Hello World</h1>
-</body>
-</html>
+<body style="text-align:center; font-family:sans-serif;">
+  <h1>Nur ein Test... Leider erwischt :-)</h1>
+  <img src="funny-image.jpg" alt="Lustiges Bild" style="
