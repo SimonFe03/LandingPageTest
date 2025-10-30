@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>repl.it</title>
+    <link rel="stylesheet" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css"/>
+    <link href="index.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+  <div id="container">
+     <header>
+        <h1>Very tasty cookies</h1>
+        <img src="cookie2.jpg">
+        <p>This recipe describes how to make super tasty cookies that you can eat while programming your next webpage.</p>
+    </header>
+    <section id="ingredients" onmouseover="ingredientsHover()" onmouseout="ingredientsNormal()">
+        <h2>Ingredients <i class="fa fa-birthday-cake" aria-hidden="true"></i></h2>
+        <ul>
+          <li>Milk</li>
+          <li>Sugar</li>
+          <li>Flour</li>
+          <li>Eggs</li>
+          <li>HTML code</li>
+        </ul>
+    </section>
+    <section id="preparation" onmouseover="preparationHover()" onmouseout="preparationNormal()">
+        <h2>Preparation <i class="fa fa-sliders" aria-hidden="true"></i>
+</h2>
+        <ol>
+          <li>Put everything together, first milk and flour, than butter and eggs.</li>
+          <li>Add some beautiful snippets of HTML code to make the cookies extra tasty.</li>
+          <li>Stir until it looks nice. What "looks nice" means is up to you.</li>
+          <li>Bake for exactly 42 minutes. Not longer and not shorter, this is very important.</li>
+          <li>Don't eat them all up at once to avoid the HTML cookie sickness.</li>
+        </ol>
+    </section>
+    <footer>
+        <p>Copyright: HTML-Cookie-Monster 2021</p>
+    </footer>
+  </div>
+    <script src="index.js"></script>
+  </body>
+</html>
